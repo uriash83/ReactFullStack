@@ -25,25 +25,23 @@ passport.use(new GoogleStrategy(
         clientID: keys.googleClientID,
         clientSecret: keys.googleClientSecret,
         callbackURL: '/auth/google/callback' // if we get resposne from google , google send callback to this URL
-    }, (accessToken, refreshToken, profile,done)=> {
+        //proxy: true
+    }, 
+        async (accessToken, refreshToken, profile,done)=> {
         //accesToken expired after some time
         //console.log('accessToken: ' +accessToken)
         //console.log('refreshToken: ' + refreshToken)
         //console.log('profile' + util.inspect(profile, {depth: null}))
-        User.findOne({ googleId: profile.id })
-            .then((existingUser)=>{
+        const existingUser = await User.findOne({ googleId: profile.id })
+            
                 if(existingUser){
                     // id user exist 
                     done(null,existingUser);
                     //done(noerror,przekazanie do passport usera)
                 }
-                else{
-                    // if user not exist create one
-                    new User({googleId: profile.id })
-                        .save()
-                        .then((user)=> done(null,user));
-                }
-            })
+                // if user not exist create one
+                const user = await new User({googleId: profile.id }).save()
+                done(null,user) 
         
         }
 ));

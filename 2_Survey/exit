@@ -1,0 +1,1176 @@
+[33mcommit bcfe76c97ac28b047e568fcaeb47c551e2d42c6f[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: Martin <marcin.mentel@gmail.com>
+Date:   Tue Nov 12 20:04:03 2019 +0100
+
+    add client , add proxy - doesnt work  , add setup redux add simple design
+
+[1mdiff --git a/.gitignore b/.gitignore[m
+[1mindex 411e419..137d77a 100644[m
+[1m--- a/.gitignore[m
+[1m+++ b/.gitignore[m
+[36m@@ -2,6 +2,7 @@[m
+ [m
+ # dependencies[m
+ /server/node_modules[m
+[32m+[m[32m/server/config/keys.js[m
+ [m
+ # testing[m
+ /coverage[m
+[1mdiff --git a/server/client/.gitignore b/server/client/.gitignore[m
+[1mnew file mode 100644[m
+[1mindex 0000000..5e96a22[m
+[1m--- /dev/null[m
+[1m+++ b/server/client/.gitignore[m
+[36m@@ -0,0 +1,18 @@[m
+[32m+[m[32m# See https://help.github.com/ignore-files/ for more about ignoring files.[m
+[32m+[m
+[32m+[m[32m# dependencies[m
+[32m+[m[32m/node_modules[m
+[32m+[m[32m/client/node_modules[m
+[32m+[m[32m# testing[m
+[32m+[m[32m/coverage[m
+[32m+[m
+[32m+[m[32m# production[m
+[32m+[m[32m/build[m
+[32m+[m
+[32m+[m[32m# misc[m
+[32m+[m[32m.DS_Store[m
+[32m+[m[32m.env[m
+[32m+[m[32mnpm-debug.log*[m
+[32m+[m[32myarn-debug.log*[m
+[32m+[m[32myarn-error.log*[m
+[32m+[m
+[1mdiff --git a/server/client/README.md b/server/client/README.md[m
+[1mnew file mode 100644[m
+[1mindex 0000000..a520336[m
+[1m--- /dev/null[m
+[1m+++ b/server/client/README.md[m
+[36m@@ -0,0 +1,1623 @@[m
+[32m+[m[32mThis project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).[m
+[32m+[m
+[32m+[m[32mBelow you will find some information on how to perform common tasks.<br>[m
+[32m+[m[32mYou can find the most recent version of this guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).[m
+[32m+[m
+[32m+[m[32m## Table of Contents[m
+[32m+[m
+[32m+[m[32m- [Updating to New Releases](#updating-to-new-releases)[m
+[32m+[m[32m- [Sending Feedback](#sending-feedback)[m
+[32m+[m[32m- [Folder Structure](#folder-structure)[m
+[32m+[m[32m- [Available Scripts](#available-scripts)[m
+[32m+[m[32m  - [npm start](#npm-start)[m
+[32m+[m[32m  - [npm test](#npm-test)[m
+[32m+[m[32m  - [npm run build](#npm-run-build)[m
+[32m+[m[32m  - [npm run eject](#npm-run-eject)[m
+[32m+[m[32m- [Supported Language Features and Polyfills](#supported-language-features-and-polyfills)[m
+[32m+[m[32m- [Syntax Highlighting in the Editor](#syntax-highlighting-in-the-editor)[m
+[32m+[m[32m- [Displaying Lint Output in the Editor](#displaying-lint-output-in-the-editor)[m
+[32m+[m[32m- [Debugging in the Editor](#debugging-in-the-editor)[m
+[32m+[m[32m- [Changing the Page `<title>`](#changing-the-page-title)[m
+[32m+[m[32m- [Installing a Dependency](#installing-a-dependency)[m
+[32m+[m[32m- [Importing a Component](#importing-a-component)[m
+[32m+[m[32m- [Adding a Stylesheet](#adding-a-stylesheet)[m
+[32m+[m[32m- [Post-Processing CSS](#post-processing-css)[m
+[32m+[m[32m- [Adding a CSS Preprocessor (Sass, Less etc.)](#adding-a-css-preprocessor-sass-less-etc)[m
+[32m+[m[32m- [Adding Images and Fonts](#adding-images-and-fonts)[m
+[32m+[m[32m- [Using the `public` Folder](#using-the-public-folder)[m
+[32m+[m[32m  - [Changing the HTML](#changing-the-html)[m
+[32m+[m[32m  - [Adding Assets Outside of the Module System](#adding-assets-outside-of-the-module-system)[m
+[32m+[m[32m  - [When to Use the `public` Folder](#when-to-use-the-public-folder)[m
+[32m+[m[32m- [Using Global Variables](#using-global-variables)[m
+[32m+[m[32m- [Adding Bootstrap](#adding-bootstrap)[m
+[32m+[m[32m  - [Using a Custom Theme](#using-a-custom-theme)[m
+[32m+[m[32m- [Adding Flow](#adding-flow)[m
+[32m+[m[32m- [Adding Custom Environment Variables](#adding-custom-environment-variables)[m
+[32m+[m[32m  - [Referencing Environment Variables in the HTML](#referencing-environment-variables-in-the-html)[m
+[32m+[m[32m  - [Adding Temporary Environment Variables In Your Shell](#adding-temporary-environment-variables-in-your-shell)[m
+[32m+[m[32m  - [Adding Development Environment Variables In `.env`](#adding-development-environment-variables-in-env)[m
+[32m+[m[32m- [Can I Use Decorators?](#can-i-use-decorators)[m
+[32m+[m[32m- [Integrating with an API Backend](#integrating-with-an-api-backend)[m
+[32m+[m[32m  - [Node](#node)[m
+[32m+[m[32m  - [Ruby on Rails](#ruby-on-rails)[m
+[32m+[m[32m- [Proxying API Requests in Development](#proxying-api-requests-in-development)[m
+[32m+[m[32m- [Using HTTPS in Development](#using-https-in-development)[m
+[32m+[m[32m- [Generating Dynamic `<meta>` Tags on the Server](#generating-dynamic-meta-tags-on-the-server)[m
+[32m+[m[32m- [Pre-Rendering into Static HTML Files](#pre-rendering-into-static-html-files)[m
+[32m+[m[32m- [Injecting Data from the Server into the Page](#injecting-data-from-the-server-into-the-page)[m
+[32m+[m[32m- [Running Tests](#running-tests)[m
+[32m+[m[32m  - [Filename Conventions](#filename-conventions)[m
+[32m+[m[32m  - [Command Line Interface](#command-line-interface)[m
+[32m+[m[32m  - [Version Control Integration](#version-control-integration)[m
+[32m+[m[32m  - [Writing Tests](#writing-tests)[m
+[32m+[m[32m  - [Testing Components](#testing-components)[m
+[32m+[m[32m  - [Using Third Party Assertion Libraries](#using-third-party-assertion-libraries)[m
+[32m+[m[32m  - [Initializing Test Environment](#initializing-test-environment)[m
+[32m+[m[32m  - [Focusing and Excluding Tests](#focusing-and-excluding-tests)[m
+[32m+[m[32m  - [Coverage Reporting](#coverage-reporting)[m
+[32m+[m[32m  - [Continuous Integration](#continuous-integration)[m
+[32m+[m[32m  - [Disabling jsdom](#disabling-jsdom)[m
+[32m+[m[32m  - [Snapshot Testing](#snapshot-testing)[m
+[32m+[m[32m  - [Editor Integration](#editor-integration)[m
+[32m+[m[32m- [Developing Components in Isolation](#developing-components-in-isolation)[m
+[32m+[m[32m- [Making a Progressive Web App](#making-a-progressive-web-app)[m
+[32m+[m[32m- [Deployment](#deployment)[m
+[32m+[m[32m  - [Static Server](#static-server)[m
+[32m+[m[32m  - [Other Solutions](#other-solutions)[m
+[32m+[m[32m  - [Serving Apps with Client-Side Routing](#serving-apps-with-client-side-routing)[m
+[32m+[m[32m  - [Building for Relative Paths](#building-for-relative-paths)[m
+[32m+[m[32m  - [Azure](#azure)[m
+[32m+[m[32m  - [Firebase](#firebase)[m
+[32m+[m[32m  - [GitHub Pages](#github-pages)[m
+[32m+[m[32m  - [Heroku](#heroku)[m
+[32m+[m[32m  - [Modulus](#modulus)[m
+[32m+[m[32m  - [Netlify](#netlify)[m
+[32m+[m[32m  - [Now](#now)[m
+[32m+[m[32m  - [S3 and CloudFront](#s3-and-cloudfront)[m
+[32m+[m[32m  - [Surge](#surge)[m
+[32m+[m[32m- [Advanced Configuration](#advanced-configuration)[m
+[32m+[m[32m- [Troubleshooting](#troubleshooting)[m
+[32m+[m[32m  - [`npm start` doesn’t detect changes](#npm-start-doesnt-detect-changes)[m
+[32m+[m[32m  - [`npm test` hangs on macOS Sierra](#npm-test-hangs-on-macos-sierra)[m
+[32m+[m[32m  - [`npm run build` silently fails](#npm-run-build-silently-fails)[m
+[32m+[m[32m  - [`npm run build` fails on Heroku](#npm-run-build-fails-on-heroku)[m
+[32m+[m[32m- [Something Missing?](#something-missing)[m
+[32m+[m
+[32m+[m[32m## Updating to New Releases[m
+[32m+[m
+[32m+[m[32mCreate React App is divided into two packages:[m
+[32m+[m
+[32m+[m[32m* `create-react-app` is a global command-line utility that you use to create new projects.[m
+[32m+[m[32m* `react-scripts` is a development dependency in the generated projects (including this one).[m
+[32m+[m
+[32m+[m[32mYou almost never need to update `create-react-app` itself: it delegates all the setup to `react-scripts`.[m
+[32m+[m
+[32m+[m[32mWhen you run `create-react-app`, it always creates the project with the latest version of `react-scripts` so you’ll get all the new features and improvements in newly created apps automatically.[m
+[32m+[m
+[32m+[m[32mTo update an existing project to a new version of `react-scripts`, [open the changelog](https://github.com/facebookincubator/create-react-app/blob/master/CHANGELOG.md), find the version you’re currently on (check `package.json` in this folder if you’re not sure), and apply the migration instructions for the newer versions.[m
+[32m+[m
+[32m+[m[32mIn most cases bumping the `react-scripts` version in `package.json` and running `npm install` in this folder should be enough, but it’s good to consult the [changelog](https://github.com/facebookincubator/create-react-app/blob/master/CHANGELOG.md) for potential breaking changes.[m
+[32m+[m
+[32m+[m[32mWe commit to keeping the breaking changes minimal so you can upgrade `react-scripts` painlessly.[m
+[32m+[m
+[32m+[m[32m## Sending Feedback[m
+[32m+[m
+[32m+[m[32mWe are always open to [your feedback](https://github.com/facebookincubator/create-react-app/issues).[m
+[32m+[m
+[32m+[m[32m## Folder Structure[m
+[32m+[m
+[32m+[m[32mAfter creation, your project should look like this:[m
+[32m+[m
+[32m+[m[32m```[m
+[32m+[m[32mmy-app/[m
+[32m+[m[32m  README.md[m
+[32m+[m[32m  node_modules/[m
+[32m+[m[32m  package.json[m
+[32m+[m[32m  public/[m
+[32m+[m[32m    index.html[m
+[32m+[m[32m    favicon.ico[m
+[32m+[m[32m  src/[m
+[32m+[m[32m    App.css[m
+[32m+[m[32m    App.js[m
+[32m+[m[32m    App.test.js[m
+[32m+[m[32m    index.css[m
+[32m+[m[32m    index.js[m
+[32m+[m[32m    logo.svg[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mFor the project to build, **these files must exist with exact filenames**:[m
+[32m+[m
+[32m+[m[32m* `public/index.html` is the page template;[m
+[32m+[m[32m* `src/index.js` is the JavaScript entry point.[m
+[32m+[m
+[32m+[m[32mYou can delete or rename the other files.[m
+[32m+[m
+[32m+[m[32mYou may create subdirectories inside `src`. For faster rebuilds, only files inside `src` are processed by Webpack.<br>[m
+[32m+[m[32mYou need to **put any JS and CSS files inside `src`**, or Webpack won’t see them.[m
+[32m+[m
+[32m+[m[32mOnly files inside `public` can be used from `public/index.html`.<br>[m
+[32m+[m[32mRead instructions below for using assets from JavaScript and HTML.[m
+[32m+[m
+[32m+[m[32mYou can, however, create more top-level directories.<br>[m
+[32m+[m[32mThey will not be included in the production build so you can use them for things like documentation.[m
+[32m+[m
+[32m+[m[32m## Available Scripts[m
+[32m+[m
+[32m+[m[32mIn the project directory, you can run:[m
+[32m+[m
+[32m+[m[32m### `npm start`[m
+[32m+[m
+[32m+[m[32mRuns the app in the development mode.<br>[m
+[32m+[m[32mOpen [http://localhost:3000](http://localhost:3000) to view it in the browser.[m
+[32m+[m
+[32m+[m[32mThe page will reload if you make edits.<br>[m
+[32m+[m[32mYou will also see any lint errors in the console.[m
+[32m+[m
+[32m+[m[32m### `npm test`[m
+[32m+[m
+[32m+[m[32mLaunches the test runner in the interactive watch mode.<br>[m
+[32m+[m[32mSee the section about [running tests](#running-tests) for more information.[m
+[32m+[m
+[32m+[m[32m### `npm run build`[m
+[32m+[m
+[32m+[m[32mBuilds the app for production to the `build` folder.<br>[m
+[32m+[m[32mIt correctly bundles React in production mode and optimizes the build for the best performance.[m
+[32m+[m
+[32m+[m[32mThe build is minified and the filenames include the hashes.<br>[m
+[32m+[m[32mYour app is ready to be deployed![m
+[32m+[m
+[32m+[m[32mSee the section about [deployment](#deployment) for more information.[m
+[32m+[m
+[32m+[m[32m### `npm run eject`[m
+[32m+[m
+[32m+[m[32m**Note: this is a one-way operation. Once you `eject`, you can’t go back!**[m
+[32m+[m
+[32m+[m[32mIf you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.[m
+[32m+[m
+[32m+[m[32mInstead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.[m
+[32m+[m
+[32m+[m[32mYou don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.[m
+[32m+[m
+[32m+[m[32m## Supported Language Features and Polyfills[m
+[32m+[m
+[32m+[m[32mThis project supports a superset of the latest JavaScript standard.<br>[m
+[32m+[m[32mIn addition to [ES6](https://github.com/lukehoban/es6features) syntax features, it also supports:[m
+[32m+[m
+[32m+[m[32m* [Exponentiation Operator](https://github.com/rwaldron/exponentiation-operator) (ES2016).[m
+[32m+[m[32m* [Async/await](https://github.com/tc39/ecmascript-asyncawait) (ES2017).[m
+[32m+[m[32m* [Object Rest/Spread Properties](https://github.com/sebmarkbage/ecmascript-rest-spread) (stage 3 proposal).[m
+[32m+[m[32m* [Class Fields and Static Properties](https://github.com/tc39/proposal-class-public-fields) (stage 2 proposal).[m
+[32m+[m[32m* [JSX](https://facebook.github.io/react/docs/introducing-jsx.html) and [Flow](https://flowtype.org/) syntax.[m
+[32m+[m
+[32m+[m[32mLearn more about [different proposal stages](https://babeljs.io/docs/plugins/#presets-stage-x-experimental-presets-).[m
+[32m+[m
+[32m+[m[32mWhile we recommend to use experimental proposals with some caution, Facebook heavily uses these features in the product code, so we intend to provide [codemods](https://medium.com/@cpojer/effective-javascript-codemods-5a6686bb46fb) if any of these proposals change in the future.[m
+[32m+[m
+[32m+[m[32mNote that **the project only includes a few ES6 [polyfills](https://en.wikipedia.org/wiki/Polyfill)**:[m
+[32m+[m
+[32m+[m[32m* [`Object.assign()`](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/assign) via [`object-assign`](https://github.com/sindresorhus/object-assign).[m
+[32m+[m[32m* [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) via [`promise`](https://github.com/then/promise).[m
+[32m+[m[32m* [`fetch()`](https://developer.mozilla.org/en/docs/Web/API/Fetch_API) via [`whatwg-fetch`](https://github.com/github/fetch).[m
+[32m+[m
+[32m+[m[32mIf you use any other ES6+ features that need **runtime support** (such as `Array.from()` or `Symbol`), make sure you are including the appropriate polyfills manually, or that the browsers you are targeting already support them.[m
+[32m+[m
+[32m+[m[32m## Syntax Highlighting in the Editor[m
+[32m+[m
+[32m+[m[32mTo configure the syntax highlighting in your favorite text editor, head to the [relevant Babel documentation page](https://babeljs.io/docs/editors) and follow the instructions. Some of the most popular editors are covered.[m
+[32m+[m
+[32m+[m[32m## Displaying Lint Output in the Editor[m
+[32m+[m
+[32m+[m[32m>Note: this feature is available with `react-scripts@0.2.0` and higher.[m
+[32m+[m
+[32m+[m[32mSome editors, including Sublime Text, Atom, and Visual Studio Code, provide plugins for ESLint.[m
+[32m+[m
+[32m+[m[32mThey are not required for linting. You should see the linter output right in your terminal as well as the browser console. However, if you prefer the lint results to appear right in your editor, there are some extra steps you can do.[m
+[32m+[m
+[32m+[m[32mYou would need to install an ESLint plugin for your editor first.[m
+[32m+[m
+[32m+[m[32m>**A note for Atom `linter-eslint` users**[m
+[32m+[m
+[32m+[m[32m>If you are using the Atom `linter-eslint` plugin, make sure that **Use global ESLint installation** option is checked:[m
+[32m+[m
+[32m+[m[32m><img src="http://i.imgur.com/yVNNHJM.png" width="300">[m
+[32m+[m
+[32m+[m
+[32m+[m[32m>**For Visual Studio Code users**[m
+[32m+[m
+[32m+[m[32m>VS Code ESLint plugin automatically detects Create React App's configuration file. So you do not need to create `eslintrc.json` at the root directory, except when you want to add your own rules. In that case, you should include CRA's config by adding this line:[m
+[32m+[m
+[32m+[m[32m>```js[m
+[32m+[m[32m{[m
+[32m+[m[32m  // ...[m
+[32m+[m[32m  "extends": "react-app"[m
+[32m+[m[32m}[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mThen add this block to the `package.json` file of your project:[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32m{[m
+[32m+[m[32m  // ...[m
+[32m+[m[32m  "eslintConfig": {[m
+[32m+[m[32m    "extends": "react-app"[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mFinally, you will need to install some packages *globally*:[m
+[32m+[m
+[32m+[m[32m```sh[m
+[32m+[m[32mnpm install -g eslint-config-react-app@0.3.0 eslint@3.8.1 babel-eslint@7.0.0 eslint-plugin-react@6.4.1 eslint-plugin-import@2.0.1 eslint-plugin-jsx-a11y@4.0.0 eslint-plugin-flowtype@2.21.0[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mWe recognize that this is suboptimal, but it is currently required due to the way we hide the ESLint dependency. The ESLint team is already [working on a solution to this](https://github.com/eslint/eslint/issues/3458) so this may become unnecessary in a couple of months.[m
+[32m+[m
+[32m+[m[32m## Debugging in the Editor[m
+[32m+[m
+[32m+[m[32m**This feature is currently only supported by [Visual Studio Code](https://code.visualstudio.com) editor.**[m
+[32m+[m
+[32m+[m[32mVisual Studio Code supports live-editing and debugging out of the box with Create React App. This enables you as a developer to write and debug your React code without leaving the editor, and most importantly it enables you to have a continuous development workflow, where context switching is minimal, as you don’t have to switch between tools.[m
+[32m+[m
+[32m+[m[32mYou would need to have the latest version of [VS Code](https://code.visualstudio.com) and VS Code [Chrome Debugger Extension](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) installed.[m
+[32m+[m
+[32m+[m[32mThen add the block below to your `launch.json` file and put it inside the `.vscode` folder in your app’s root directory.[m
+[32m+[m
+[32m+[m[32m```json[m
+[32m+[m[32m{[m
+[32m+[m[32m  "version": "0.2.0",[m
+[32m+[m[32m  "configurations": [{[m
+[32m+[m[32m    "name": "Chrome",[m
+[32m+[m[32m    "type": "chrome",[m
+[32m+[m[32m    "request": "launch",[m
+[32m+[m[32m    "url": "http://localhost:3000",[m
+[32m+[m[32m    "webRoot": "${workspaceRoot}/src",[m
+[32m+[m[32m    "userDataDir": "${workspaceRoot}/.vscode/chrome",[m
+[32m+[m[32m    "sourceMapPathOverrides": {[m
+[32m+[m[32m      "webpack:///src/*": "${webRoot}/*"[m
+[32m+[m[32m    }[m
+[32m+[m[32m  }][m
+[32m+[m[32m}[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mStart your app by running `npm start`, and start debugging in VS Code by pressing `F5` or by clicking the green debug icon. You can now write code, set breakpoints, make changes to the code, and debug your newly modified code—all from your editor.[m
+[32m+[m
+[32m+[m[32m## Changing the Page `<title>`[m
+[32m+[m
+[32m+[m[32mYou can find the source HTML file in the `public` folder of the generated project. You may edit the `<title>` tag in it to change the title from “React App” to anything else.[m
+[32m+[m
+[32m+[m[32mNote that normally you wouldn’t edit files in the `public` folder very often. For example, [adding a stylesheet](#adding-a-stylesheet) is done without touching the HTML.[m
+[32m+[m
+[32m+[m[32mIf you need to dynamically update the page title based on the content, you can use the browser [`document.title`](https://developer.mozilla.org/en-US/docs/Web/API/Document/title) API. For more complex scenarios when you want to change the title from React components, you can use [React Helmet](https://github.com/nfl/react-helmet), a third party library.[m
+[32m+[m
+[32m+[m[32mIf you use a custom server for your app in production and want to modify the title before it gets sent to the browser, you can follow advice in [this section](#generating-dynamic-meta-tags-on-the-server). Alternatively, you can pre-build each page as a static HTML file which then loads the JavaScript bundle, which is covered [here](#pre-rendering-into-static-html-files).[m
+[32m+[m
+[32m+[m[32m## Installing a Dependency[m
+[32m+[m
+[32m+[m[32mThe generated project includes React and ReactDOM as dependencies. It also includes a set of scripts used by Create React App as a development dependency. You may install other dependencies (for example, React Router) with `npm`:[m
+[32m+[m
+[32m+[m[32m```[m
+[32m+[m[32mnpm install --save <library-name>[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m## Importing a Component[m
+[32m+[m
+[32m+[m[32mThis project setup supports ES6 modules thanks to Babel.<br>[m
+[32m+[m[32mWhile you can still use `require()` and `module.exports`, we encourage you to use [`import` and `export`](http://exploringjs.com/es6/ch_modules.html) instead.[m
+[32m+[m
+[32m+[m[32mFor example:[m
+[32m+[m
+[32m+[m[32m### `Button.js`[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32mimport React, { Component } from 'react';[m
+[32m+[m
+[32m+[m[32mclass Button extends Component {[m
+[32m+[m[32m  render() {[m
+[32m+[m[32m    // ...[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mexport default Button; // Don’t forget to use export default![m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### `DangerButton.js`[m
+[32m+[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32mimport React, { Component } from 'react';[m
+[32m+[m[32mimport Button from './Button'; // Import a component from another file[m
+[32m+[m
+[32m+[m[32mclass DangerButton extends Component {[m
+[32m+[m[32m  render() {[m
+[32m+[m[32m    return <Button color="red" />;[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mexport default DangerButton;[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mBe aware of the [difference between default and named exports](http://stackoverflow.com/questions/36795819/react-native-es-6-when-should-i-use-curly-braces-for-import/36796281#36796281). It is a common source of mistakes.[m
+[32m+[m
+[32m+[m[32mWe suggest that you stick to using default imports and exports when a module only exports a single thing (for example, a component). That’s what you get when you use `export default Button` and `import Button from './Button'`.[m
+[32m+[m
+[32m+[m[32mNamed exports are useful for utility modules that export several functions. A module may have at most one default export and as many named exports as you like.[m
+[32m+[m
+[32m+[m[32mLearn more about ES6 modules:[m
+[32m+[m
+[32m+[m[32m* [When to use the curly braces?](http://stackoverflow.com/questions/36795819/react-native-es-6-when-should-i-use-curly-braces-for-import/36796281#36796281)[m
+[32m+[m[32m* [Exploring ES6: Modules](http://exploringjs.com/es6/ch_modules.html)[m
+[32m+[m[32m* [Understanding ES6: Modules](https://leanpub.com/understandinges6/read#leanpub-auto-encapsulating-code-with-modules)[m
+[32m+[m
+[32m+[m[32m## Adding a Stylesheet[m
+[32m+[m
+[32m+[m[32mThis project setup uses [Webpack](https://webpack.github.io/) for handling all assets. Webpack offers a custom way of “extending” the concept of `import` beyond JavaScript. To express that a JavaScript file depends on a CSS file, you need to **import the CSS from the JavaScript file**:[m
+[32m+[m
+[32m+[m[32m### `Button.css`[m
+[32m+[m
+[32m+[m[32m```css[m
+[32m+[m[32m.Button {[m
+[32m+[m[32m  padding: 20px;[m
+[32m+[m[32m}[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### `Button.js`[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32mimport React, { Component } from 'react';[m
+[32m+[m[32mimport './Button.css'; // Tell Webpack that Button.js uses these styles[m
+[32m+[m
+[32m+[m[32mclass Button extends Component {[m
+[32m+[m[32m  render() {[m
+[32m+[m[32m    // You can use them as regular CSS styles[m
+[32m+[m[32m    return <div className="Button" />;[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m**This is not required for React** but many people find this feature convenient. You can read about the benefits of this approach [here](https://medium.com/seek-ui-engineering/block-element-modifying-your-javascript-components-d7f99fcab52b). However you should be aware that this makes your code less portable to other build tools and environments than Webpack.[m
+[32m+[m
+[32m+[m[32mIn development, expressing dependencies this way allows your styles to be reloaded on the fly as you edit them. In production, all CSS files will be concatenated into a single minified `.css` file in the build output.[m
+[32m+[m
+[32m+[m[32mIf you are concerned about using Webpack-specific semantics, you can put all your CSS right into `src/index.css`. It would still be imported from `src/index.js`, but you could always remove that import if you later migrate to a different build tool.[m
+[32m+[m
+[32m+[m[32m## Post-Processing CSS[m
+[32m+[m
+[32m+[m[32mThis project setup minifies your CSS and adds vendor prefixes to it automatically through [Autoprefixer](https://github.com/postcss/autoprefixer) so you don’t need to worry about it.[m
+[32m+[m
+[32m+[m[32mFor example, this:[m
+[32m+[m
+[32m+[m[32m```css[m
+[32m+[m[32m.App {[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  flex-direction: row;[m
+[32m+[m[32m  align-items: center;[m
+[32m+[m[32m}[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mbecomes this:[m
+[32m+[m
+[32m+[m[32m```css[m
+[32m+[m[32m.App {[m
+[32m+[m[32m  display: -webkit-box;[m
+[32m+[m[32m  display: -ms-flexbox;[m
+[32m+[m[32m  display: flex;[m
+[32m+[m[32m  -webkit-box-orient: horizontal;[m
+[32m+[m[32m  -webkit-box-direction: normal;[m
+[32m+[m[32m      -ms-flex-direction: row;[m
+[32m+[m[32m          flex-direction: row;[m
+[32m+[m[32m  -webkit-box-align: center;[m
+[32m+[m[32m      -ms-flex-align: center;[m
+[32m+[m[32m          align-items: center;[m
+[32m+[m[32m}[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mIf you need to disable autoprefixing for some reason, [follow this section](https://github.com/postcss/autoprefixer#disabling).[m
+[32m+[m
+[32m+[m[32m## Adding a CSS Preprocessor (Sass, Less etc.)[m
+[32m+[m
+[32m+[m[32mGenerally, we recommend that you don’t reuse the same CSS classes across different components. For example, instead of using a `.Button` CSS class in `<AcceptButton>` and `<RejectButton>` components, we recommend creating a `<Button>` component with its own `.Button` styles, that both `<AcceptButton>` and `<RejectButton>` can render (but [not inherit](https://facebook.github.io/react/docs/composition-vs-inheritance.html)).[m
+[32m+[m
+[32m+[m[32mFollowing this rule often makes CSS preprocessors less useful, as features like mixins and nesting are replaced by component composition. You can, however, integrate a CSS preprocessor if you find it valuable. In this walkthrough, we will be using Sass, but you can also use Less, or another alternative.[m
+[32m+[m
+[32m+[m[32mFirst, let’s install the command-line interface for Sass:[m
+[32m+[m
+[32m+[m[32m```[m
+[32m+[m[32mnpm install node-sass --save-dev[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mThen in `package.json`, add the following lines to `scripts`:[m
+[32m+[m
+[32m+[m[32m```diff[m
+[32m+[m[32m   "scripts": {[m
+[32m+[m[32m+    "build-css": "node-sass src/ -o src/",[m
+[32m+[m[32m+    "watch-css": "npm run build-css && node-sass src/ -o src/ --watch --recursive",[m
+[32m+[m[32m     "start": "react-scripts start",[m
+[32m+[m[32m     "build": "react-scripts build",[m
+[32m+[m[32m     "test": "react-scripts test --env=jsdom",[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m>Note: To use a different preprocessor, replace `build-css` and `watch-css` commands according to your preprocessor’s documentation.[m
+[32m+[m
+[32m+[m[32mNow you can rename `src/App.css` to `src/App.scss` and run `npm run watch-css`. The watcher will find every Sass file in `src` subdirectories, and create a corresponding CSS file next to it, in our case overwriting `src/App.css`. Since `src/App.js` still imports `src/App.css`, the styles become a part of your application. You can now edit `src/App.scss`, and `src/App.css` will be regenerated.[m
+[32m+[m
+[32m+[m[32mTo share variables between Sass files, you can use Sass imports. For example, `src/App.scss` and other component style files could include `@import "./shared.scss";` with variable definitions.[m
+[32m+[m
+[32m+[m[32mAt this point you might want to remove all CSS files from the source control, and add `src/**/*.css` to your `.gitignore` file. It is generally a good practice to keep the build products outside of the source control.[m
+[32m+[m
+[32m+[m[32mAs a final step, you may find it convenient to run `watch-css` automatically with `npm start`, and run `build-css` as a part of `npm run build`. You can use the `&&` operator to execute two scripts sequentially. However, there is no cross-platform way to run two scripts in parallel, so we will install a package for this:[m
+[32m+[m
+[32m+[m[32m```[m
+[32m+[m[32mnpm install --save-dev npm-run-all[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mThen we can change `start` and `build` scripts to include the CSS preprocessor commands:[m
+[32m+[m
+[32m+[m[32m```diff[m
+[32m+[m[32m   "scripts": {[m
+[32m+[m[32m     "build-css": "node-sass src/ -o src/",[m
+[32m+[m[32m     "watch-css": "npm run build-css && node-sass src/ -o src/ --watch --recursive",[m
+[32m+[m[32m-    "start": "react-scripts start",[m
+[32m+[m[32m-    "build": "react-scripts build",[m
+[32m+[m[32m+    "start-js": "react-scripts start",[m
+[32m+[m[32m+    "start": "npm-run-all -p watch-css start-js",[m
+[32m+[m[32m+    "build": "npm run build-css && react-scripts build",[m
+[32m+[m[32m     "test": "react-scripts test --env=jsdom",[m
+[32m+[m[32m     "eject": "react-scripts eject"[m
+[32m+[m[32m   }[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mNow running `npm start` and `npm run build` also builds Sass files. Note that `node-sass` seems to have an [issue recognizing newly created files on some systems](https://github.com/sass/node-sass/issues/1891) so you might need to restart the watcher when you create a file until it’s resolved.[m
+[32m+[m
+[32m+[m[32m## Adding Images and Fonts[m
+[32m+[m
+[32m+[m[32mWith Webpack, using static assets like images and fonts works similarly to CSS.[m
+[32m+[m
+[32m+[m[32mYou can **`import` an image right in a JavaScript module**. This tells Webpack to include that image in the bundle. Unlike CSS imports, importing an image or a font gives you a string value. This value is the final image path you can reference in your code.[m
+[32m+[m
+[32m+[m[32mHere is an example:[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32mimport React from 'react';[m
+[32m+[m[32mimport logo from './logo.png'; // Tell Webpack this JS file uses this image[m
+[32m+[m
+[32m+[m[32mconsole.log(logo); // /logo.84287d09.png[m
+[32m+[m
+[32m+[m[32mfunction Header() {[m
+[32m+[m[32m  // Import result is the URL of your image[m
+[32m+[m[32m  return <img src={logo} alt="Logo" />;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mexport default Header;[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mThis ensures that when the project is built, Webpack will correctly move the images into the build folder, and provide us with correct paths.[m
+[32m+[m
+[32m+[m[32mThis works in CSS too:[m
+[32m+[m
+[32m+[m[32m```css[m
+[32m+[m[32m.Logo {[m
+[32m+[m[32m  background-image: url(./logo.png);[m
+[32m+[m[32m}[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mWebpack finds all relative module references in CSS (they start with `./`) and replaces them with the final paths from the compiled bundle. If you make a typo or accidentally delete an important file, you will see a compilation error, just like when you import a non-existent JavaScript module. The final filenames in the compiled bundle are generated by Webpack from content hashes. If the file content changes in the future, Webpack will give it a different name in production so you don’t need to worry about long-term caching of assets.[m
+[32m+[m
+[32m+[m[32mPlease be advised that this is also a custom feature of Webpack.[m
+[32m+[m
+[32m+[m[32m**It is not required for React** but many people enjoy it (and React Native uses a similar mechanism for images).<br>[m
+[32m+[m[32mAn alternative way of handling static assets is described in the next section.[m
+[32m+[m
+[32m+[m[32m## Using the `public` Folder[m
+[32m+[m
+[32m+[m[32m>Note: this feature is available with `react-scripts@0.5.0` and higher.[m
+[32m+[m
+[32m+[m[32m### Changing the HTML[m
+[32m+[m
+[32m+[m[32mThe `public` folder contains the HTML file so you can tweak it, for example, to [set the page title](#changing-the-page-title).[m
+[32m+[m[32mThe `<script>` tag with the compiled code will be added to it automatically during the build process.[m
+[32m+[m
+[32m+[m[32m### Adding Assets Outside of the Module System[m
+[32m+[m
+[32m+[m[32mYou can also add other assets to the `public` folder.[m
+[32m+[m
+[32m+[m[32mNote that we normally encourage you to `import` assets in JavaScript files instead.[m
+[32m+[m[32mFor example, see the sections on [adding a stylesheet](#adding-a-stylesheet) and [adding images and fonts](#adding-images-and-fonts).[m
+[32m+[m[32mThis mechanism provides a number of benefits:[m
+[32m+[m
+[32m+[m[32m* Scripts and stylesheets get minified and bundled together to avoid extra network requests.[m
+[32m+[m[32m* Missing files cause compilation errors instead of 404 errors for your users.[m
+[32m+[m[32m* Result filenames include content hashes so you don’t need to worry about browsers caching their old versions.[m
+[32m+[m
+[32m+[m[32mHowever there is an **escape hatch** that you can use to add an asset outside of the module system.[m
+[32m+[m
+[32m+[m[32mIf you put a file into the `public` folder, it will **not** be processed by Webpack. Instead it will be copied into the build folder untouched.   To reference assets in the `public` folder, you need to use a special variable called `PUBLIC_URL`.[m
+[32m+[m
+[32m+[m[32mInside `index.html`, you can use it like this:[m
+[32m+[m
+[32m+[m[32m```html[m
+[32m+[m[32m<link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mOnly files inside the `public` folder will be accessible by `%PUBLIC_URL%` prefix. If you need to use a file from `src` or `node_modules`, you’ll have to copy it there to explicitly specify your intention to make this file a part of the build.[m
+[32m+[m
+[32m+[m[32mWhen you run `npm run build`, Create React App will substitute `%PUBLIC_URL%` with a correct absolute path so your project works even if you use client-side routing or host it at a non-root URL.[m
+[32m+[m
+[32m+[m[32mIn JavaScript code, you can use `process.env.PUBLIC_URL` for similar purposes:[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32mrender() {[m
+[32m+[m[32m  // Note: this is an escape hatch and should be used sparingly![m
+[32m+[m[32m  // Normally we recommend using `import` for getting asset URLs[m
+[32m+[m[32m  // as described in “Adding Images and Fonts” above this section.[m
+[32m+[m[32m  return <img src={process.env.PUBLIC_URL + '/img/logo.png'} />;[m
+[32m+[m[32m}[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mKeep in mind the downsides of this approach:[m
+[32m+[m
+[32m+[m[32m* None of the files in `public` folder get post-processed or minified.[m
+[32m+[m[32m* Missing files will not be called at compilation time, and will cause 404 errors for your users.[m
+[32m+[m[32m* Result filenames won’t include content hashes so you’ll need to add query arguments or rename them every time they change.[m
+[32m+[m
+[32m+[m[32m### When to Use the `public` Folder[m
+[32m+[m
+[32m+[m[32mNormally we recommend importing [stylesheets](#adding-a-stylesheet), [images, and fonts](#adding-images-and-fonts) from JavaScript.[m
+[32m+[m[32mThe `public` folder is useful as a workaround for a number of less common cases:[m
+[32m+[m
+[32m+[m[32m* You need a file with a specific name in the build output, such as [`manifest.webmanifest`](https://developer.mozilla.org/en-US/docs/Web/Manifest).[m
+[32m+[m[32m* You have thousands of images and need to dynamically reference their paths.[m
+[32m+[m[32m* You want to include a small script like [`pace.js`](http://github.hubspot.com/pace/docs/welcome/) outside of the bundled code.[m
+[32m+[m[32m* Some library may be incompatible with Webpack and you have no other option but to include it as a `<script>` tag.[m
+[32m+[m
+[32m+[m[32mNote that if you add a `<script>` that declares global variables, you also need to read the next section on using them.[m
+[32m+[m
+[32m+[m[32m## Using Global Variables[m
+[32m+[m
+[32m+[m[32mWhen you include a script in the HTML file that defines global variables and try to use one of these variables in the code, the linter will complain because it cannot see the definition of the variable.[m
+[32m+[m
+[32m+[m[32mYou can avoid this by reading the global variable explicitly from the `window` object, for example:[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32mconst $ = window.$;[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mThis makes it obvious you are using a global variable intentionally rather than because of a typo.[m
+[32m+[m
+[32m+[m[32mAlternatively, you can force the linter to ignore any line by adding `// eslint-disable-line` after it.[m
+[32m+[m
+[32m+[m[32m## Adding Bootstrap[m
+[32m+[m
+[32m+[m[32mYou don’t have to use [React Bootstrap](https://react-bootstrap.github.io) together with React but it is a popular library for integrating Bootstrap with React apps. If you need it, you can integrate it with Create React App by following these steps:[m
+[32m+[m
+[32m+[m[32mInstall React Bootstrap and Bootstrap from npm. React Bootstrap does not include Bootstrap CSS so this needs to be installed as well:[m
+[32m+[m
+[32m+[m[32m```[m
+[32m+[m[32mnpm install react-bootstrap --save[m
+[32m+[m[32mnpm install bootstrap@3 --save[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mImport Bootstrap CSS and optionally Bootstrap theme CSS in the beginning of your ```src/index.js``` file:[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32mimport 'bootstrap/dist/css/bootstrap.css';[m
+[32m+[m[32mimport 'bootstrap/dist/css/bootstrap-theme.css';[m
+[32m+[m[32m// Put any other imports below so that CSS from your[m
+[32m+[m[32m// components takes precedence over default styles.[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mImport required React Bootstrap components within ```src/App.js``` file or your custom component files:[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32mimport { Navbar, Jumbotron, Button } from 'react-bootstrap';[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mNow you are ready to use the imported React Bootstrap components within your component hierarchy defined in the render method. Here is an example [`App.js`](https://gist.githubusercontent.com/gaearon/85d8c067f6af1e56277c82d19fd4da7b/raw/6158dd991b67284e9fc8d70b9d973efe87659d72/App.js) redone using React Bootstrap.[m
+[32m+[m
+[32m+[m[32m### Using a Custom Theme[m
+[32m+[m
+[32m+[m[32mSometimes you might need to tweak the visual styles of Bootstrap (or equivalent package).<br>[m
+[32m+[m[32mWe suggest the following approach:[m
+[32m+[m
+[32m+[m[32m* Create a new package that depends on the package you wish to customize, e.g. Bootstrap.[m
+[32m+[m[32m* Add the necessary build steps to tweak the theme, and publish your package on npm.[m
+[32m+[m[32m* Install your own theme npm package as a dependency of your app.[m
+[32m+[m
+[32m+[m[32mHere is an example of adding a [customized Bootstrap](https://medium.com/@tacomanator/customizing-create-react-app-aa9ffb88165) that follows these steps.[m
+[32m+[m
+[32m+[m[32m## Adding Flow[m
+[32m+[m
+[32m+[m[32mFlow is a static type checker that helps you write code with fewer bugs. Check out this [introduction to using static types in JavaScript](https://medium.com/@preethikasireddy/why-use-static-types-in-javascript-part-1-8382da1e0adb) if you are new to this concept.[m
+[32m+[m
+[32m+[m[32mRecent versions of [Flow](http://flowtype.org/) work with Create React App projects out of the box.[m
+[32m+[m
+[32m+[m[32mTo add Flow to a Create React App project, follow these steps:[m
+[32m+[m
+[32m+[m[32m1. Run `npm install --save-dev flow-bin` (or `yarn add --dev flow-bin`).[m
+[32m+[m[32m2. Add `"flow": "flow"` to the `scripts` section of your `package.json`.[m
+[32m+[m[32m3. Run `npm run flow -- init` (or `yarn flow -- init`) to create a [`.flowconfig` file](https://flowtype.org/docs/advanced-configuration.html) in the root directory.[m
+[32m+[m[32m4. Add `// @flow` to any files you want to type check (for example, to `src/App.js`).[m
+[32m+[m
+[32m+[m[32mNow you can run `npm run flow` (or `yarn flow`) to check the files for type errors.[m
+[32m+[m[32mYou can optionally use an IDE like [Nuclide](https://nuclide.io/docs/languages/flow/) for a better integrated experience.[m
+[32m+[m[32mIn the future we plan to integrate it into Create React App even more closely.[m
+[32m+[m
+[32m+[m[32mTo learn more about Flow, check out [its documentation](https://flowtype.org/).[m
+[32m+[m
+[32m+[m[32m## Adding Custom Environment Variables[m
+[32m+[m
+[32m+[m[32m>Note: this feature is available with `react-scripts@0.2.3` and higher.[m
+[32m+[m
+[32m+[m[32mYour project can consume variables declared in your environment as if they were declared locally in your JS files. By[m
+[32m+[m[32mdefault you will have `NODE_ENV` defined for you, and any other environment variables starting with[m
+[32m+[m[32m`REACT_APP_`.[m
+[32m+[m
+[32m+[m[32m**The environment variables are embedded during the build time**. Since Create React App produces a static HTML/CSS/JS bundle, it can’t possibly read them at runtime. To read them at runtime, you would need to load HTML into memory on the server and replace placeholders in runtime, just like [described here](#injecting-data-from-the-server-into-the-page). Alternatively you can rebuild the app on the server anytime you change them.[m
+[32m+[m
+[32m+[m[32m>Note: You must create custom environment variables beginning with `REACT_APP_`. Any other variables except `NODE_ENV` will be ignored to avoid accidentally [exposing a private key on the machine that could have the same name](https://github.com/facebookincubator/create-react-app/issues/865#issuecomment-252199527). Changing any environment variables will require you to restart the development server if it is running.[m
+[32m+[m
+[32m+[m[32mThese environment variables will be defined for you on `process.env`. For example, having an environment[m
+[32m+[m[32mvariable named `REACT_APP_SECRET_CODE` will be exposed in your JS as `process.env.REACT_APP_SECRET_CODE`.[m
+[32m+[m
+[32m+[m[32mThere is also a special built-in environment variable called `NODE_ENV`. You can read it from `process.env.NODE_ENV`. When you run `npm start`, it is always equal to `'development'`, when you run `npm test` it is always equal to `'test'`, and when you run `npm run build` to make a production bundle, it is always equal to `'production'`. **You cannot override `NODE_ENV` manually.** This prevents developers from accidentally deploying a slow development build to production.[m
+[32m+[m
+[32m+[m[32mThese environment variables can be useful for displaying information conditionally based on where the project is[m
+[32m+[m[32mdeployed or consuming sensitive data that lives outside of version control.[m
+[32m+[m
+[32m+[m[32mFirst, you need to have environment variables defined. For example, let’s say you wanted to consume a secret defined[m
+[32m+[m[32min the environment inside a `<form>`:[m
+[32m+[m
+[32m+[m[32m```jsx[m
+[32m+[m[32mrender() {[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    <div>[m
+[32m+[m[32m      <small>You are running this application in <b>{process.env.NODE_ENV}</b> mode.</small>[m
+[32m+[m[32m      <form>[m
+[32m+[m[32m        <input type="hidden" defaultValue={process.env.REACT_APP_SECRET_CODE} />[m
+[32m+[m[32m      </form>[m
+[32m+[m[32m    </div>[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mDuring the build, `process.env.REACT_APP_SECRET_CODE` will be replaced with the current value of the `REACT_APP_SECRET_CODE` environment variable. Remember that the `NODE_ENV` variable will be set for you automatically.[m
+[32m+[m
+[32m+[m[32mWhen you load the app in the browser and inspect the `<input>`, you will see its value set to `abcdef`, and the bold text will show the environment provided when using `npm start`:[m
+[32m+[m
+[32m+[m[32m```html[m
+[32m+[m[32m<div>[m
+[32m+[m[32m  <small>You are running this application in <b>development</b> mode.</small>[m
+[32m+[m[32m  <form>[m
+[32m+[m[32m    <input type="hidden" value="abcdef" />[m
+[32m+[m[32m  </form>[m
+[32m+[m[32m</div>[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mThe above form is looking for a variable called `REACT_APP_SECRET_CODE` from the environment. In order to consume this[m
+[32m+[m[32mvalue, we need to have it defined in the environment. This can be done using two ways: either in your shell or in[m
+[32m+[m[32ma `.env` file. Both of these ways are described in the next few sections.[m
+[32m+[m
+[32m+[m[32mHaving access to the `NODE_ENV` is also useful for performing actions conditionally:[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32mif (process.env.NODE_ENV !== 'production') {[m
+[32m+[m[32m  analytics.disable();[m
+[32m+[m[32m}[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mWhen you compile the app with `npm run build`, the minification step will strip out this condition, and the resulting bundle will be smaller.[m
+[32m+[m
+[32m+[m[32m### Referencing Environment Variables in the HTML[m
+[32m+[m
+[32m+[m[32m>Note: this feature is available with `react-scripts@0.9.0` and higher.[m
+[32m+[m
+[32m+[m[32mYou can also access the environment variables starting with `REACT_APP_` in the `public/index.html`. For example:[m
+[32m+[m
+[32m+[m[32m```html[m
+[32m+[m[32m<title>%REACT_APP_WEBSITE_NAME%</title>[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mNote that the caveats from the above section apply:[m
+[32m+[m
+[32m+[m[32m* Apart from a few built-in variables (`NODE_ENV` and `PUBLIC_URL`), variable names must start with `REACT_APP_` to work.[m
+[32m+[m[32m* The environment variables are injected at build time. If you need to inject them at runtime, [follow this approach instead](#generating-dynamic-meta-tags-on-the-server).[m
+[32m+[m
+[32m+[m[32m### Adding Temporary Environment Variables In Your Shell[m
+[32m+[m
+[32m+[m[32mDefining environment variables can vary between OSes. It’s also important to know that this manner is temporary for the[m
+[32m+[m[32mlife of the shell session.[m
+[32m+[m
+[32m+[m[32m#### Windows (cmd.exe)[m
+[32m+[m
+[32m+[m[32m```cmd[m
+[32m+[m[32mset REACT_APP_SECRET_CODE=abcdef&&npm start[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m(Note: the lack of whitespace is intentional.)[m
+[32m+[m
+[32m+[m[32m#### Linux, macOS (Bash)[m
+[32m+[m
+[32m+[m[32m```bash[m
+[32m+[m[32mREACT_APP_SECRET_CODE=abcdef npm start[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### Adding Development Environment Variables In `.env`[m
+[32m+[m
+[32m+[m[32m>Note: this feature is available with `react-scripts@0.5.0` and higher.[m
+[32m+[m
+[32m+[m[32mTo define permanent environment variables, create a file called `.env` in the root of your project:[m
+[32m+[m
+[32m+[m[32m```[m
+[32m+[m[32mREACT_APP_SECRET_CODE=abcdef[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mThese variables will act as the defaults if the machine does not explicitly set them.<br>[m
+[32m+[m[32mPlease refer to the [dotenv documentation](https://github.com/motdotla/dotenv) for more details.[m
+[32m+[m
+[32m+[m[32m>Note: If you are defining environment variables for development, your CI and/or hosting platform will most likely need[m
+[32m+[m[32mthese defined as well. Consult their documentation how to do this. For example, see the documentation for [Travis CI](https://docs.travis-ci.com/user/environment-variables/) or [Heroku](https://devcenter.heroku.com/articles/config-vars).[m
+[32m+[m
+[32m+[m[32m## Can I Use Decorators?[m
+[32m+[m
+[32m+[m[32mMany popular libraries use [decorators](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841) in their documentation.<br>[m
+[32m+[m[32mCreate React App doesn’t support decorator syntax at the moment because:[m
+[32m+[m
+[32m+[m[32m* It is an experimental proposal and is subject to change.[m
+[32m+[m[32m* The current specification version is not officially supported by Babel.[m
+[32m+[m[32m* If the specification changes, we won’t be able to write a codemod because we don’t use them internally at Facebook.[m
+[32m+[m
+[32m+[m[32mHowever in many cases you can rewrite decorator-based code without decorators just as fine.<br>[m
+[32m+[m[32mPlease refer to these two threads for reference:[m
+[32m+[m
+[32m+[m[32m* [#214](https://github.com/facebookincubator/create-react-app/issues/214)[m
+[32m+[m[32m* [#411](https://github.com/facebookincubator/create-react-app/issues/411)[m
+[32m+[m
+[32m+[m[32mCreate React App will add decorator support when the specification advances to a stable stage.[m
+[32m+[m
+[32m+[m[32m## Integrating with an API Backend[m
+[32m+[m
+[32m+[m[32mThese tutorials will help you to integrate your app with an API backend running on another port,[m
+[32m+[m[32musing `fetch()` to access it.[m
+[32m+[m
+[32m+[m[32m### Node[m
+[32m+[m[32mCheck out [this tutorial](https://www.fullstackreact.com/articles/using-create-react-app-with-a-server/).[m
+[32m+[m[32mYou can find the companion GitHub repository [here](https://github.com/fullstackreact/food-lookup-demo).[m
+[32m+[m
+[32m+[m[32m### Ruby on Rails[m
+[32m+[m
+[32m+[m[32mCheck out [this tutorial](https://www.fullstackreact.com/articles/how-to-get-create-react-app-to-work-with-your-rails-api/).[m
+[32m+[m[32mYou can find the companion GitHub repository [here](https://github.com/fullstackreact/food-lookup-demo-rails).[m
+[32m+[m
+[32m+[m[32m## Proxying API Requests in Development[m
+[32m+[m
+[32m+[m[32m>Note: this feature is available with `react-scripts@0.2.3` and higher.[m
+[32m+[m
+[32m+[m[32mPeople often serve the front-end React app from the same host and port as their backend implementation.<br>[m
+[32m+[m[32mFor example, a production setup might look like this after the app is deployed:[m
+[32m+[m
+[32m+[m[32m```[m
+[32m+[m[32m/             - static server returns index.html with React app[m
+[32m+[m[32m/todos        - static server returns index.html with React app[m
+[32m+[m[32m/api/todos    - server handles any /api/* requests using the backend implementation[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mSuch setup is **not** required. However, if you **do** have a setup like this, it is convenient to write requests like `fetch('/api/todos')` without worrying about redirecting them to another host or port during development.[m
+[32m+[m
+[32m+[m[32mTo tell the development server to proxy any unknown requests to your API server in development, add a `proxy` field to your `package.json`, for example:[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32m  "proxy": "http://localhost:4000",[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mThis way, when you `fetch('/api/todos')` in development, the development server will recognize that it’s not a static asset, and will proxy your request to `http://localhost:4000/api/todos` as a fallback. The development server will only attempt to send requests without a `text/html` accept header to the proxy.[m
+[32m+[m
+[32m+[m[32mConveniently, this avoids [CORS issues](http://stackoverflow.com/questions/21854516/understanding-ajax-cors-and-security-considerations) and error messages like this in development:[m
+[32m+[m
+[32m+[m[32m```[m
+[32m+[m[32mFetch API cannot load http://localhost:4000/api/todos. No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'http://localhost:3000' is therefore not allowed access. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mKeep in mind that `proxy` only has effect in development (with `npm start`), and it is up to you to ensure that URLs like `/api/todos` point to the right thing in production. You don’t have to use the `/api` prefix. Any unrecognized request without a `text/html` accept header will be redirected to the specified `proxy`.[m
+[32m+[m
+[32m+[m[32mThe `proxy` option supports HTTP, HTTPS and WebSocket connections.<br>[m
+[32m+[m[32mIf the `proxy` option is **not** flexible enough for you, alternatively you can:[m
+[32m+[m
+[32m+[m[32m* Enable CORS on your server ([here’s how to do it for Express](http://enable-cors.org/server_expressjs.html)).[m
+[32m+[m[32m* Use [environment variables](#adding-custom-environment-variables) to inject the right server host and port into your app.[m
+[32m+[m
+[32m+[m[32m## Using HTTPS in Development[m
+[32m+[m
+[32m+[m[32m>Note: this feature is available with `react-scripts@0.4.0` and higher.[m
+[32m+[m
+[32m+[m[32mYou may require the dev server to serve pages over HTTPS. One particular case where this could be useful is when using [the "proxy" feature](#proxying-api-requests-in-development) to proxy requests to an API server when that API server is itself serving HTTPS.[m
+[32m+[m
+[32m+[m[32mTo do this, set the `HTTPS` environment variable to `true`, then start the dev server as usual with `npm start`:[m
+[32m+[m
+[32m+[m[32m#### Windows (cmd.exe)[m
+[32m+[m
+[32m+[m[32m```cmd[m
+[32m+[m[32mset HTTPS=true&&npm start[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m(Note: the lack of whitespace is intentional.)[m
+[32m+[m
+[32m+[m[32m#### Linux, macOS (Bash)[m
+[32m+[m
+[32m+[m[32m```bash[m
+[32m+[m[32mHTTPS=true npm start[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mNote that the server will use a self-signed certificate, so your web browser will almost definitely display a warning upon accessing the page.[m
+[32m+[m
+[32m+[m[32m## Generating Dynamic `<meta>` Tags on the Server[m
+[32m+[m
+[32m+[m[32mSince Create React App doesn’t support server rendering, you might be wondering how to make `<meta>` tags dynamic and reflect the current URL. To solve this, we recommend to add placeholders into the HTML, like this:[m
+[32m+[m
+[32m+[m[32m```html[m
+[32m+[m[32m<!doctype html>[m
+[32m+[m[32m<html lang="en">[m
+[32m+[m[32m  <head>[m
+[32m+[m[32m    <meta property="og:title" content="__OG_TITLE__">[m
+[32m+[m[32m    <meta property="og:description" content="__OG_DESCRIPTION__">[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mThen, on the server, regardless of the backend you use, you can read `index.html` into memory and replace `__OG_TITLE__`, `__OG_DESCRIPTION__`, and any other placeholders with values depending on the current URL. Just make sure to sanitize and escape the interpolated values so that they are safe to embed into HTML![m
+[32m+[m
+[32m+[m[32mIf you use a Node server, you can even share the route matching logic between the client and the server. However duplicating it also works fine in simple cases.[m
+[32m+[m
+[32m+[m[32m## Pre-Rendering into Static HTML Files[m
+[32m+[m
+[32m+[m[32mIf you’re hosting your `build` with a static hosting provider you can use [react-snapshot](https://www.npmjs.com/package/react-snapshot) to generate HTML pages for each route, or relative link, in your application. These pages will then seamlessly become active, or “hydrated”, when the JavaScript bundle has loaded.[m
+[32m+[m
+[32m+[m[32mThere are also opportunities to use this outside of static hosting, to take the pressure off the server when generating and caching routes.[m
+[32m+[m
+[32m+[m[32mThe primary benefit of pre-rendering is that you get the core content of each page _with_ the HTML payload—regardless of whether or not your JavaScript bundle successfully downloads. It also increases the likelihood that each route of your application will be picked up by search engines.[m
+[32m+[m
+[32m+[m[32mYou can read more about [zero-configuration pre-rendering (also called snapshotting) here](https://medium.com/superhighfives/an-almost-static-stack-6df0a2791319).[m
+[32m+[m
+[32m+[m[32m## Injecting Data from the Server into the Page[m
+[32m+[m
+[32m+[m[32mSimilarly to the previous section, you can leave some placeholders in the HTML that inject global variables, for example:[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32m<!doctype html>[m
+[32m+[m[32m<html lang="en">[m
+[32m+[m[32m  <head>[m
+[32m+[m[32m    <script>[m
+[32m+[m[32m      window.SERVER_DATA = __SERVER_DATA__;[m
+[32m+[m[32m    </script>[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mThen, on the server, you can replace `__SERVER_DATA__` with a JSON of real data right before sending the response. The client code can then read `window.SERVER_DATA` to use it. **Make sure to [sanitize the JSON before sending it to the client](https://medium.com/node-security/the-most-common-xss-vulnerability-in-react-js-applications-2bdffbcc1fa0) as it makes your app vulnerable to XSS attacks.**[m
+[32m+[m
+[32m+[m[32m## Running Tests[m
+[32m+[m
+[32m+[m[32m>Note: this feature is available with `react-scripts@0.3.0` and higher.<br>[m
+[32m+[m[32m>[Read the migration guide to learn how to enable it in older projects!](https://github.com/facebookincubator/create-react-app/blob/master/CHANGELOG.md#migrating-from-023-to-030)[m
+[32m+[m
+[32m+[m[32mCreate React App uses [Jest](https://facebook.github.io/jest/) as its test runner. To prepare for this integration, we did a [major revamp](https://facebook.github.io/jest/blog/2016/09/01/jest-15.html) of Jest so if you heard bad things about it years ago, give it another try.[m
+[32m+[m
+[32m+[m[32mJest is a Node-based runner. This means that the tests always run in a Node environment and not in a real browser. This lets us enable fast iteration speed and prevent flakiness.[m
+[32m+[m
+[32m+[m[32mWhile Jest provides browser globals such as `window` thanks to [jsdom](https://github.com/tmpvar/jsdom), they are only approximations of the real browser behavior. Jest is intended to be used for unit tests of your logic and your components rather than the DOM quirks.[m
+[32m+[m
+[32m+[m[32mWe recommend that you use a separate tool for browser end-to-end tests if you need them. They are beyond the scope of Create React App.[m
+[32m+[m
+[32m+[m[32m### Filename Conventions[m
+[32m+[m
+[32m+[m[32mJest will look for test files with any of the following popular naming conventions:[m
+[32m+[m
+[32m+[m[32m* Files with `.js` suffix in `__tests__` folders.[m
+[32m+[m[32m* Files with `.test.js` suffix.[m
+[32m+[m[32m* Files with `.spec.js` suffix.[m
+[32m+[m
+[32m+[m[32mThe `.test.js` / `.spec.js` files (or the `__tests__` folders) can be located at any depth under the `src` top level folder.[m
+[32m+[m
+[32m+[m[32mWe recommend to put the test files (or `__tests__` folders) next to the code they are testing so that relative imports appear shorter. For example, if `App.test.js` and `App.js` are in the same folder, the test just needs to `import App from './App'` instead of a long relative path. Colocation also helps find tests more quickly in larger projects.[m
+[32m+[m
+[32m+[m[32m### Command Line Interface[m
+[32m+[m
+[32m+[m[32mWhen you run `npm test`, Jest will launch in the watch mode. Every time you save a file, it will re-run the tests, just like `npm start` recompiles the code.[m
+[32m+[m
+[32m+[m[32mThe watcher includes an interactive command-line interface with the ability to run all tests, or focus on a search pattern. It is designed this way so that you can keep it open and enjoy fast re-runs. You can learn the commands from the “Watch Usage” note that the watcher prints after every run:[m
+[32m+[m
+[32m+[m[32m![Jest watch mode](http://facebook.github.io/jest/img/blog/15-watch.gif)[m
+[32m+[m
+[32m+[m[32m### Version Control Integration[m
+[32m+[m
+[32m+[m[32mBy default, when you run `npm test`, Jest will only run the tests related to files changed since the last commit. This is an optimization designed to make your tests runs fast regardless of how many tests you have. However it assumes that you don’t often commit the code that doesn’t pass the tests.[m
+[32m+[m
+[32m+[m[32mJest will always explicitly mention that it only ran tests related to the files changed since the last commit. You can also press `a` in the watch mode to force Jest to run all tests.[m
+[32m+[m
+[32m+[m[32mJest will always run all tests on a [continuous integration](#continuous-integration) server or if the project is not inside a Git or Mercurial repository.[m
+[32m+[m
+[32m+[m[32m### Writing Tests[m
+[32m+[m
+[32m+[m[32mTo create tests, add `it()` (or `test()`) blocks with the name of the test and its code. You may optionally wrap them in `describe()` blocks for logical grouping but this is neither required nor recommended.[m
+[32m+[m
+[32m+[m[32mJest provides a built-in `expect()` global function for making assertions. A basic test could look like this:[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32mimport sum from './sum';[m
+[32m+[m
+[32m+[m[32mit('sums numbers', () => {[m
+[32m+[m[32m  expect(sum(1, 2)).toEqual(3);[m
+[32m+[m[32m  expect(sum(2, 2)).toEqual(4);[m
+[32m+[m[32m});[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mAll `expect()` matchers supported by Jest are [extensively documented here](http://facebook.github.io/jest/docs/expect.html).<br>[m
+[32m+[m[32mYou can also use [`jest.fn()` and `expect(fn).toBeCalled()`](http://facebook.github.io/jest/docs/expect.html#tohavebeencalled) to create “spies” or mock functions.[m
+[32m+[m
+[32m+[m[32m### Testing Components[m
+[32m+[m
+[32m+[m[32mThere is a broad spectrum of component testing techniques. They range from a “smoke test” verifying that a component renders without throwing, to shallow rendering and testing some of the output, to full rendering and testing component lifecycle and state changes.[m
+[32m+[m
+[32m+[m[32mDifferent projects choose different testing tradeoffs based on how often components change, and how much logic they contain. If you haven’t decided on a testing strategy yet, we recommend that you start with creating simple smoke tests for your components:[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32mimport React from 'react';[m
+[32m+[m[32mimport ReactDOM from 'react-dom';[m
+[32m+[m[32mimport App from './App';[m
+[32m+[m
+[32m+[m[32mit('renders without crashing', () => {[m
+[32m+[m[32m  const div = document.createElement('div');[m
+[32m+[m[32m  ReactDOM.render(<App />, div);[m
+[32m+[m[32m});[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mThis test mounts a component and makes sure that it didn’t throw during rendering. Tests like this provide a lot value with very little effort so they are great as a starting point, and this is the test you will find in `src/App.test.js`.[m
+[32m+[m
+[32m+[m[32mWhen you encounter bugs caused by changing components, you will gain a deeper insight into which parts of them are worth testing in your application. This might be a good time to introduce more specific tests asserting specific expected output or behavior.[m
+[32m+[m
+[32m+[m[32mIf you’d like to test components in isolation from the child components they render, we recommend using [`shallow()` rendering API](http://airbnb.io/enzyme/docs/api/shallow.html) from [Enzyme](http://airbnb.io/enzyme/). You can write a smoke test with it too:[m
+[32m+[m
+[32m+[m[32m```sh[m
+[32m+[m[32mnpm install --save-dev enzyme react-addons-test-utils[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32mimport React from 'react';[m
+[32m+[m[32mimport { shallow } from 'enzyme';[m
+[32m+[m[32mimport App from './App';[m
+[32m+[m
+[32m+[m[32mit('renders without crashing', () => {[m
+[32m+[m[32m  shallow(<App />);[m
+[32m+[m[32m});[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mUnlike the previous smoke test using `ReactDOM.render()`, this test only renders `<App>` and doesn’t go deeper. For example, even if `<App>` itself renders a `<Button>` that throws, this test will pass. Shallow rendering is great for isolated unit tests, but you may still want to create some full rendering tests to ensure the components integrate correctly. Enzyme supports [full rendering with `mount()`](http://airbnb.io/enzyme/docs/api/mount.html), and you can also use it for testing state changes and component lifecycle.[m
+[32m+[m
+[32m+[m[32mYou can read the [Enzyme documentation](http://airbnb.io/enzyme/) for more testing techniques. Enzyme documentation uses Chai and Sinon for assertions but you don’t have to use them because Jest provides built-in `expect()` and `jest.fn()` for spies.[m
+[32m+[m
+[32m+[m[32mHere is an example from Enzyme documentation that asserts specific output, rewritten to use Jest matchers:[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32mimport React from 'react';[m
+[32m+[m[32mimport { shallow } from 'enzyme';[m
+[32m+[m[32mimport App from './App';[m
+[32m+[m
+[32m+[m[32mit('renders welcome message', () => {[m
+[32m+[m[32m  const wrapper = shallow(<App />);[m
+[32m+[m[32m  const welcome = <h2>Welcome to React</h2>;[m
+[32m+[m[32m  // expect(wrapper.contains(welcome)).to.equal(true);[m
+[32m+[m[32m  expect(wrapper.contains(welcome)).toEqual(true);[m
+[32m+[m[32m});[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mAll Jest matchers are [extensively documented here](http://facebook.github.io/jest/docs/expect.html).<br>[m
+[32m+[m[32mNevertheless you can use a third-party assertion library like [Chai](http://chaijs.com/) if you want to, as described below.[m
+[32m+[m
+[32m+[m[32mAdditionally, you might find [jest-enzyme](https://github.com/blainekasten/enzyme-matchers) helpful to simplify your tests with readable matchers. The above `contains` code can be written simpler with jest-enzyme.[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32mexpect(wrapper).toContainReact(welcome)[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mTo setup jest-enzyme with Create React App, follow the instructions for [initializing your test environment](#initializing-test-environment) to import `jest-enzyme`.[m
+[32m+[m
+[32m+[m[32m```sh[m
+[32m+[m[32mnpm install --save-dev jest-enzyme[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32m// src/setupTests.js[m
+[32m+[m[32mimport 'jest-enzyme';[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m
+[32m+[m[32m### Using Third Party Assertion Libraries[m
+[32m+[m
+[32m+[m[32mWe recommend that you use `expect()` for assertions and `jest.fn()` for spies. If you are having issues with them please [file those against Jest](https://github.com/facebook/jest/issues/new), and we’ll fix them. We intend to keep making them better for React, supporting, for example, [pretty-printing React elements as JSX](https://github.com/facebook/jest/pull/1566).[m
+[32m+[m
+[32m+[m[32mHowever, if you are used to other libraries, such as [Chai](http://chaijs.com/) and [Sinon](http://sinonjs.org/), or if you have existing code using them that you’d like to port over, you can import them normally like this:[m
+[32m+[m
+[32m+[m[32m```js[m
+[32m+[m[32mimport sinon from 'sinon';[m
+[32m+[m[32mimport { expect } from 'chai';[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mand then use them in your tests like you normally do.[m
+[32m+[m
+[32m+[m[32m### Initializing Test Environment[m
+[32m+[m
+[32m+[m[32m>Note: this feature is available with `react-scripts@0.4.0` and higher.[m
+[32m+[m
+[32m+[m[32mIf your app uses a browser API that you need to mock in your tests or if you just need a global setup before running your tests, add a `src/setupTests.js` to your project. It will be automatically executed before running your tests.[m
+[32m+[m
+[32m+[m[32mFor example:[m
+[32m+[m
+[32m+[m[32m#### `src/setupTests.js`[m
+[32m+[m[32m```js[m
+[32m+[m[32mconst localStorageMock = {[m
+[32m+[m[32m  getItem: jest.fn(),[m
+[32m+[m[32m  setItem: jest.fn(),[m
+[32m+[m[32m  clear: jest.fn()[m
+[32m+[m[32m};[m
+[32m+[m[32mglobal.localStorage = localStorageMock[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m### Focusing and Excluding Tests[m
+[32m+[m
+[32m+[m[32mYou can replace `it()` with `xit()` to temporarily exclude a test from being executed.<br>[m
+[32m+[m[32mSimilarly, `fit()` lets you focus on a specific test without running any other tests.[m
+[32m+[m
+[32m+[m[32m### Coverage Reporting[m
+[32m+[m
+[32m+[m[32mJest has an integrated coverage reporter that works well with ES6 and requires no configuration.<br>[m
+[32m+[m[32mRun `npm test -- --coverage` (note extra `--` in the middle) to include a coverage report like this:[m
+[32m+[m
+[32m+[m[32m![coverage report](http://i.imgur.com/5bFhnTS.png)[m
+[32m+[m
+[32m+[m[32mNote that tests run much slower with coverage so it is recommended to run it separately from your normal workflow.[m
+[32m+[m
+[32m+[m[32m### Continuous Integration[m
+[32m+[m
+[32m+[m[32mBy default `npm test` runs the watcher with interactive CLI. However, you can force it to run tests once and finish the process by setting an environment variable called `CI`.[m
+[32m+[m
+[32m+[m[32mWhen creating a build of your application with `npm run build` linter warnings are not checked by default. Like `npm test`, you can force the build to perform a linter warning check by setting the environment variable `CI`. If any warnings are encountered then the build fails.[m
+[32m+[m
+[32m+[m[32mPopular CI servers already set the environment variable `CI` by default but you can do this yourself too:[m
+[32m+[m
+[32m+[m[32m### On CI servers[m
+[32m+[m[32m#### Travis CI[m
+[32m+[m
+[32m+[m[32m1. Following the [Travis Getting started](https://docs.travis-ci.com/user/getting-started/) guide for syncing your GitHub repository with Travis.  You may need to initialize some settings manually in your [profile](https://travis-ci.org/profile) page.[m
+[32m+[m[32m1. Add a `.travis.yml` file to your git repository.[m
+[32m+[m[32m```[m
+[32m+[m[32mlanguage: node_js[m
+[32m+[m[32mnode_js:[m
+[32m+[m[32m  - 4[m
+[32m+[m[32m  - 6[m
+[32m+[m[32mcache:[m
+[32m+[m[32m  directories:[m
+[32m+[m[32m    - node_modules[m
+[32m+[m[32mscript:[m
+[32m+[m[32m  - npm test[m
+[32m+[m[32m  - npm run build[m
+[32m+[m[32m```[m
+[32m+[m[32m1. Trigger your first build with a git push.[m
+[32m+[m[32m1. [Customize your Travis CI Build](https://docs.travis-ci.com/user/customizing-the-build/) if needed.[m
+[32m+[m
+[32m+[m[32m### On your own environment[m
+[32m+[m[32m##### Windows (cmd.exe)[m
+[32m+[m
+[32m+[m[32m```cmd[m
+[32m+[m[32mset CI=true&&npm test[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m```cmd[m
+[32m+[m[32mset CI=true&&npm run build[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m(Note: the lack of whitespace is intentional.)[m
+[32m+[m
+[32m+[m[32m##### Linux, macOS (Bash)[m
+[32m+[m
+[32m+[m[32m```bash[m
+[32m+[m[32mCI=true npm test[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m```bash[m
+[32m+[m[32mCI=true npm run build[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mThe test command will force Jest to run tests once instead of launching the watcher.[m
+[32m+[m
+[32m+[m[32m>  If you find yourself doing this often in development, please [file an issue](https://github.com/facebookincubator/create-react-app/issues/new) to tell us about your use case because we want to make watcher the best experience and are open to changing how it works to accommodate more workflows.[m
+[32m+[m
+[32m+[m[
