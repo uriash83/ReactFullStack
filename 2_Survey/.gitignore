@@ -3,7 +3,8 @@
 # dependencies
 /server/node_modules
 /server/config/keys.js
-
+/server/client/.env.development
+/server/client/.env.production
 # testing
 /coverage
 
