@@ -32,5 +32,3 @@ require('./routes/surveyRoutes')(app)
 const PORT = process.env.PORT || 5000
 app.listen(PORT,()=> console.log('Listening on port: ' + PORT))
 
-// cliend ID 
-// client secret 934256346222-j53mjdu2t33h7ji328fdkvgrl7b6cgbr.apps.googleusercontent.com

@@ -38,7 +38,9 @@ passport.use(new GoogleStrategy(
                     // id user exist 
                     done(null,existingUser);
                     //done(noerror,przekazanie do passport usera)
+                    
                 }
+                
                 // if user not exist create one
                 const user = await new User({googleId: profile.id }).save()
                 done(null,user) 
